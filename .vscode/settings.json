@@ -1,0 +1,33 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "client/src/modules/__pycache__": true,
+        "client/src/modules/core/post_quantum/__pycache__": true,
+        "client/src/modules/core/symmetric/__pycache__": true,
+        "client/src/modules/ui/__pycache__": true,
+        "client/src/modules/core/__pycache__": true,
+        "client/src/modules/ui/ui/__pycache__": true,
+        "client/src/modules/ui/services/__pycache__": true,
+        "client/src/modules/ui/models/__pycache__": true,
+        "client/src/modules/ui/ui_elements/__pycache__": true,
+        "client/__pycache__": true,
+        "client/src/storage": true
+    },
+    "hide-files.files": [
+        "client/src/modules/__pycache__",
+        "client/src/modules/core/post_quantum/__pycache__",
+        "client/src/modules/core/symmetric/__pycache__",
+        "client/src/modules/ui/__pycache__",
+        "client/src/modules/core/__pycache__",
+        "client/src/modules/ui/ui/__pycache__",
+        "client/src/modules/ui/services/__pycache__",
+        "client/src/modules/ui/models/__pycache__",
+        "client/src/modules/ui/ui_elements/__pycache__",
+        "client/__pycache__",
+        "client/src/storage"
+    ]
+}
