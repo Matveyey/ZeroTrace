@@ -18,11 +18,6 @@ class ChatService:
                 "public_key": chat["public_key"],
             }
         if query:
-            self.mock_chats = [
-                chat
-                for chat in self.mock_chats
-                if query.lower() in chat["name"].lower()
-            ]
             finded = self.__messenger.search_users(query)
             for finded_user in finded:
                 user = {
@@ -32,5 +27,6 @@ class ChatService:
                 dialog_hash = self.__messenger.generate_dialog_id(
                     finded_user["kem_public_key"], finded_user["signature_public_key"]
                 )
+                print(self.mock_chats)
                 self.mock_chats[dialog_hash] = user
         return self.mock_chats

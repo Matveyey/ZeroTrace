@@ -45,7 +45,6 @@ class PostQuantumCrypto:
         :param ciphertext: шифртекст (hex)
         :return: shared_secret_hex
         """
-        with oqs.KeyEncapsulation("Kyber512") as kem:
-            kem.import_secret_key(bytes.fromhex(private_key))
+        with oqs.KeyEncapsulation("Kyber512", bytes.fromhex(private_key)) as kem:
             shared_secret = kem.decap_secret(bytes.fromhex(ciphertext))
         return shared_secret.hex()

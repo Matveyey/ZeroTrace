@@ -3,7 +3,7 @@ import flet as ft
 from modules.core.messenger_core import SecureMessenger
 from modules.ui.services.message_service import MessageService
 from modules.ui.services.chat_service import ChatService
-from modules.ui.models.message import Message
+from modules.ui.models.message import TextMessage,LoadAnim
 
 
 class ChatView:
@@ -18,7 +18,7 @@ class ChatView:
         self.load_ring = ft.ProgressRing()
         self.__chat_service = chat_service
         self.current_chat_id = None
-
+        self.messages = []
     def build(self):
         return ft.Container(
             expand=True,
@@ -32,18 +32,29 @@ class ChatView:
         )
 
     def load_messages(self, messages):
-        for msg in messages:
-            self.messages_column.controls.append(ft.Text(f"{msg.sender}: {msg.text}"))
-        self.page.update()
+        if messages:
+            for i,msg in enumerate(self.messages):
+                if isinstance(msg,LoadAnim):
+                    self.messages.pop(i)
+                    self.messages_column.controls.pop(i)
+            for msg in messages:
+                self.messages.append(msg)
+                if isinstance(msg,LoadAnim):
+                    self.messages_column.controls.append(ft.ProgressRing())
+                elif isinstance(msg, TextMessage):
+                    self.messages_column.controls.append(ft.Text(f"{msg.sender}: {msg.text}"))
+            self.page.update()
 
     def set_chat(self, chat_id):
         self.current_chat_id = chat_id
+        self.messages_column.controls.clear()
+        self.messages.clear()
         messages = self.message_service.get_messages(chat_id)
         self.load_messages(messages)
 
     def send_message(self, e):
         if self.input_field.value and self.current_chat_id:
-            msg = Message(text=self.input_field.value, sender="You")
+            msg = TextMessage(text=self.input_field.value, sender="You")
             self.messages_column.controls.append(
                 ft.Row(
                     [

@@ -1,9 +1,12 @@
 from dataclasses import dataclass
-from datetime import datetime
+from time import time
 
 
 @dataclass
-class Message:
+class TextMessage:
     text: str
     sender: str
-    timestamp: datetime = datetime.now()
+    timestamp: float = time()
+@dataclass
+class LoadAnim:
+    timestamp: float = time()
