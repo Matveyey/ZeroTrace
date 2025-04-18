@@ -16,9 +16,9 @@ from tqdm import tqdm
 
 
 class SecureMessenger:
-    __kem_public_key: str
+    kem_public_key: str
     __kem_private_key: str
-    __signature_public_key: str
+    signature_public_key: str
     __signature_private_key: str
 
     def __init__(self):
@@ -59,10 +59,10 @@ class SecureMessenger:
                 "keycheck": keycheck,
             }
 
-            self.__kem_public_key = kem_public_key
+            self.kem_public_key = kem_public_key
             self.__kem_private_key = kem_private_key
             self.__signature_private_key = signature_private_key
-            self.__signature_public_key = signature_public_key
+            self.signature_public_key = signature_public_key
             return kem_public_key, signature_public_key, data
         else:
             return None
@@ -93,9 +93,9 @@ class SecureMessenger:
             nonce, base64.b64decode(encrypted_keys["sig.private"]), None
         ).decode()
 
-        self.__kem_public_key = kem_public
+        self.kem_public_key = kem_public
         self.__kem_private_key = kem_private_key
-        self.__signature_public_key = sign_public
+        self.signature_public_key = sign_public
         self.__signature_private_key = signature_private_key
         return True
 
@@ -105,7 +105,7 @@ class SecureMessenger:
         return sha256(key_string.encode()).hexdigest()
 
     def send_message(
-        self, recipient_public_key: str, message: bytes, msg_type: int
+        self, recipient_public_key: str, message: bytes, msg_type: int, timestamp: float
     ) -> bool:
         # Шаг 1: Создание общего секрета
 
@@ -126,7 +126,7 @@ class SecureMessenger:
         signature = self.__signature.sign(message, self.__signature_private_key)
 
         return self.__api.send_message(
-            self.__kem_public_key,
+            self.kem_public_key,
             recipient_public_key,
             shared_secret_aes_ciphertext,
             shared_secret_kem_ciphertext,
@@ -135,11 +135,12 @@ class SecureMessenger:
             shared_secret_nonce,
             signature,
             sha256(
-                bytes.fromhex(self.__kem_public_key)
-                + bytes.fromhex(self.__signature_public_key)
+                bytes.fromhex(self.kem_public_key)
+                + bytes.fromhex(self.signature_public_key)
             ).hexdigest(),
             msg_type,
-            self.generate_dialog_id(self.__kem_public_key, recipient_public_key),
+            self.generate_dialog_id(self.kem_public_key, recipient_public_key),
+            timestamp,
         )
 
     def receive_all_crypted_messages(
@@ -147,13 +148,13 @@ class SecureMessenger:
         time_limit: int,
     ) -> list[dict]:
         # Шаг 0: Получение сообщений
-        return self.__api.get_messages(self.__kem_public_key, time_limit)
+        return self.__api.get_messages(self.kem_public_key, time_limit)
 
     def decrypt_message(self, messages: List[dict]) -> List[dict]:
         decrypted_msgs = []
         for msg in tqdm(messages):
             # Шаг 1: Восстановление общего секрета
-            if msg["recipient_public_key"] == self.__kem_public_key:
+            if msg["recipient_public_key"] == self.kem_public_key:
                 shared_secret = self.__quantum.decapsulate(
                     self.__kem_private_key, msg["shared_secret_kem_ciphertext"]
                 )
@@ -203,13 +204,13 @@ class SecureMessenger:
                     "msg_type": MessageType(msg["msg_type"]),
                     "hash": msg["hash_public"],
                     "timestamp": msg["timestamp"],
-                    "dialog_hash":msg["dialog_hash"]
+                    "dialog_hash": msg["dialog_hash"],
                 }
             )
         return decrypted_msgs
 
     def get_dialogs(self) -> List[dict]:
-        return self.__api.get_dialogs(self.__kem_public_key)
+        return self.__api.get_dialogs(self.kem_public_key)
 
     def get_dialog_crypted_messages(
         self, dialog_hash: str, time_limit: float

@@ -29,6 +29,7 @@ class MessageModel(BaseModel):
     hash_public: str
     msg_type: int
     dialog_hash: str
+    timestamp: float
 
 
 class DataBase:
@@ -108,7 +109,7 @@ class DataBase:
     async def add_msg(self, message: MessageModel) -> bool:
         """Добавляет сообщение в базу."""
         try:
-            query = {**message.model_dump(), "timestamp": time()}
+            query = {**message.model_dump()}
             await self.messages_collection.insert_one(query)
             logger.info("Message added successfully.")
             return True

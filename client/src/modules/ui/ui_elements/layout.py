@@ -5,6 +5,7 @@ from modules.core.messenger_core import SecureMessenger
 from modules.database import MessageDatabase
 import os
 from modules.ui.models.message import TextMessage, LoadAnim
+from .login import LoginSystem
 from time import time,sleep
 class MessengerApp:
     def __init__(self, page: ft.Page):
@@ -15,10 +16,7 @@ class MessengerApp:
         self.__secure_messenger = SecureMessenger()
         self.app_data_path = os.getenv("FLET_APP_STORAGE_DATA")
         self.database = MessageDatabase(self.app_data_path)
-        kem_pub = self.page.client_storage.get("kem_pub")
-        sign_pub = self.page.client_storage.get("sign_pub")
-        keys_data = self.page.client_storage.get("keys_data")
-        self.__secure_messenger.load_keys(kem_pub, sign_pub, keys_data, "Managua642")
+
 
     def update_database_messages(self):
         while True:
@@ -45,41 +43,20 @@ class MessengerApp:
                         message["timestamp"],
                         message["dialog_hash"],
                     )
-    def update_chat_view(self):
-        while True:
-            if not self.chat_view.current_chat_id:
-                continue
-            sleep(2)
-            last_messages = self.chat_view.messages
-            if self.chat_view.messages:
-                timestamp = max(last_messages, key=lambda x: x.timestamp).timestamp
-            else:
-                timestamp = 0
-            tuple_messages = self.database.get_messages(self.chat_view.current_chat_id,timestamp)
-            messages = []
-            for message in tuple_messages:
-                if message[2] == 0:
-                    messages.append(TextMessage(message[1].decode(),message[0],message[3]))
-                elif message[2] == 5:
-                    messages.append(LoadAnim(0))
-            if messages:
-                self.chat_view.load_messages(messages)
-    def register_screen(self):
-        self.page.add(
-            ft.TextField(
-                password=True, can_reveal_password=True, label="Enter Password"
-            )
-        )
     
-    def build(self):
+    def start(self):
         self.page.title = "ZeroTrace"
         self.page.theme_mode = "dark"
-
+        self.login_system = LoginSystem(self.page, self.__secure_messenger, self.build)
+        self.login_system.build()
+    
+    def build(self, password):
+        self.page.clean()
         self.chat_list = ChatList(
             self.page, self.__secure_messenger, on_chat_select=self.load_chat
         )
         self.chat_view = ChatView(
-            self.page, self.__secure_messenger, self.chat_list.chat_service
+            self.page, self.__secure_messenger, self.chat_list.chat_service, self.database
         )
 
         self.drawer = ft.NavigationDrawer(controls=[self.chat_list.build()])
@@ -94,7 +71,7 @@ class MessengerApp:
         self.page.drawer = self.drawer
         self.page.add(self.chat_view.build())
         self.page.run_thread(self.update_database_messages)
-        self.page.run_thread(self.update_chat_view)
+        self.page.run_thread(self.chat_view.update_chat_view)
         self.page.update()
 
     def toggle_drawer(self, e):

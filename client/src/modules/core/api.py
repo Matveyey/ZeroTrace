@@ -55,7 +55,8 @@ class API:
         signature: str,
         hash_pub: str,
         msg_type: int,
-        dialog_hash: str
+        dialog_hash: str,
+        timestamp:float
     ) -> bool:
 
         try:
@@ -72,7 +73,8 @@ class API:
                     "signature": signature,
                     "hash_public": hash_pub,
                     "msg_type": msg_type,
-                    "dialog_hash": dialog_hash
+                    "dialog_hash": dialog_hash,
+                    "timestamp":timestamp
                 },
             )
             r.raise_for_status()

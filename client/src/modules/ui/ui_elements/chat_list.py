@@ -7,14 +7,14 @@ class ChatList:
         self.chat_service = ChatService(messenger)
         self.on_chat_select = on_chat_select
         self.search_visible = False
-        self.search_box = ft.TextField(width=200,hint_text="Search...", on_change=self.search)
+        self.search_box = ft.TextField(width=200,hint_text="Search...", on_submit=self.search)
     def build(self):
         self.chat_list_column = ft.Column(scroll=ft.ScrollMode.AUTO)
         self.load_chats()
         return ft.Container(
             content=ft.Column(
                 controls=[
-                    ft.Row(controls=[self.search_box, ft.IconButton(icon=ft.Icons.SEARCH_ROUNDED)]),
+                    ft.Row(controls=[ ft.Icon(ft.Icons.SEARCH_ROUNDED),self.search_box]),
                     self.chat_list_column
                 ]
             ),
