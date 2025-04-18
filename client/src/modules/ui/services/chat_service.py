@@ -1,6 +1,6 @@
 from modules.core.messenger_core import SecureMessenger
 
-from typing import Optional, List, Dict
+from typing import Optional, Dict
 
 
 class ChatService:

@@ -47,19 +47,21 @@ class MessengerApp:
                     )
     def update_chat_view(self):
         while True:
+            if not self.chat_view.current_chat_id:
+                continue
             sleep(2)
             last_messages = self.chat_view.messages
             if self.chat_view.messages:
-                timestamp = last_messages[0].timestamp
+                timestamp = max(last_messages, key=lambda x: x.timestamp).timestamp
             else:
                 timestamp = 0
-            tuple_messages = self.database.get_messages(timestamp)
+            tuple_messages = self.database.get_messages(self.chat_view.current_chat_id,timestamp)
             messages = []
             for message in tuple_messages:
                 if message[2] == 0:
                     messages.append(TextMessage(message[1].decode(),message[0],message[3]))
                 elif message[2] == 5:
-                    messages.append(LoadAnim(message[3]))
+                    messages.append(LoadAnim(0))
             if messages:
                 self.chat_view.load_messages(messages)
     def register_screen(self):

@@ -33,8 +33,8 @@ class ChatView:
 
     def load_messages(self, messages):
         if messages:
-            for i,msg in enumerate(self.messages):
-                if isinstance(msg,LoadAnim):
+            for i,message in enumerate(self.messages):
+                if isinstance(message, LoadAnim):
                     self.messages.pop(i)
                     self.messages_column.controls.pop(i)
             for msg in messages:

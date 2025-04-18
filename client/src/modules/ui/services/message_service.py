@@ -1,9 +1,6 @@
 
 from modules.ui.models.message import TextMessage
 from modules.core.messenger_core import SecureMessenger
-from modules.core.utils import MessageType
-
-from datetime import datetime
 
 class MessageService:
     def __init__(self, messenger: SecureMessenger):
