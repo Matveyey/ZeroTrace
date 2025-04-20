@@ -1,10 +1,12 @@
 import flet as ft
+from time import time, sleep
+
 from modules.core.messenger_core import SecureMessenger
 from modules.ui.services.message_service import MessageService
 from modules.ui.services.chat_service import ChatService
 from modules.ui.models.message import TextMessage, LoadAnim
 from modules.database import MessageDatabase
-from time import time, sleep
+
 
 class ChatView:
     def __init__(

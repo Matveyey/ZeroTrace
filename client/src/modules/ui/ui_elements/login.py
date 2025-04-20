@@ -1,4 +1,5 @@
 import flet as ft
+
 from modules.core.messenger_core import SecureMessenger
 
 

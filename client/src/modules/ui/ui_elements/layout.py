@@ -1,12 +1,17 @@
+import os
+from time import time, sleep
+
 import flet as ft
+
 from .chat_list import ChatList
 from .chat_view import ChatView
 from modules.core.messenger_core import SecureMessenger
 from modules.database import MessageDatabase
-import os
-from modules.ui.models.message import TextMessage, LoadAnim
+
 from .login import LoginSystem
-from time import time,sleep
+
+
+
 class MessengerApp:
     def __init__(self, page: ft.Page):
         self.page = page
@@ -16,7 +21,6 @@ class MessengerApp:
         self.__secure_messenger = SecureMessenger()
         self.app_data_path = os.getenv("FLET_APP_STORAGE_DATA")
         self.database = MessageDatabase(self.app_data_path)
-
 
     def update_database_messages(self):
         while True:
@@ -43,20 +47,23 @@ class MessengerApp:
                         message["timestamp"],
                         message["dialog_hash"],
                     )
-    
+
     def start(self):
         self.page.title = "ZeroTrace"
         self.page.theme_mode = "dark"
         self.login_system = LoginSystem(self.page, self.__secure_messenger, self.build)
         self.login_system.build()
-    
+
     def build(self, password):
         self.page.clean()
         self.chat_list = ChatList(
             self.page, self.__secure_messenger, on_chat_select=self.load_chat
         )
         self.chat_view = ChatView(
-            self.page, self.__secure_messenger, self.chat_list.chat_service, self.database
+            self.page,
+            self.__secure_messenger,
+            self.chat_list.chat_service,
+            self.database,
         )
 
         self.drawer = ft.NavigationDrawer(controls=[self.chat_list.build()])

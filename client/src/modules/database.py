@@ -1,6 +1,7 @@
 import sqlite3
 from typing import List, Tuple, Optional
 from os.path import join
+
 class MessageDatabase:
     def __init__(self, db_path: str):
         self.db_path = join(db_path,"messages.db")
