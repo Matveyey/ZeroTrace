@@ -1,94 +1,89 @@
-# ZeroTrace: Защищённый мессенджер, устойчивый к квантовым вычислениям
+# ZeroTrace: Quantum-Resistant Secure Messenger
 
-## Описание
+## Description
 
-ZeroTrace — это защищённый мессенджер, разработанный для противостояния угрозам квантовых вычислений. Традиционные криптографические протоколы, такие как RSA и ECC, уязвимы перед квантовыми алгоритмами, например алгоритмом Шора. ZeroTrace решает эту проблему, внедряя постквантовые криптографические алгоритмы для обеспечения конфиденциальности, целостности и безопасности коммуникаций.
+ZeroTrace is a secure messenger designed to counter threats posed by quantum computing. Traditional cryptographic protocols, such as RSA and ECC, are vulnerable to quantum algorithms like Shor's algorithm. ZeroTrace addresses this issue by implementing post-quantum cryptographic algorithms to ensure confidentiality, integrity, and security of communications.
 
-Основная цель ZeroTrace — разработка и анализ прототипа мессенджера с использованием постквантовых алгоритмов. Задачи проекта включают:
-- Изучение и выбор эффективных стандартов постквантовой криптографии (например, рекомендации NIST).
-- Проектирование архитектуры для безопасного обмена сообщениями с использованием механизмов инкапсуляции ключей (KEM) и цифровых подписей.
-- Реализация прототипа со сквозным шифрованием (E2EE), децентрализацией и защитой от квантовых атак.
-- Тестирование производительности алгоритмов и оценка их применимости в реальном времени.
+The primary goal of ZeroTrace is to develop and analyze a prototype messenger using post-quantum algorithms. Project objectives include:
+- Studying and selecting effective post-quantum cryptography standards (e.g., NIST recommendations).
+- Designing an architecture for secure message exchange using key encapsulation mechanisms (KEM) and digital signatures.
+- Implementing a prototype with end-to-end encryption (E2EE), decentralization, and protection against quantum attacks.
+- Testing algorithm performance and evaluating their real-time applicability.
 
-## Особенности
+## Features
 
-- **Постквантовая безопасность**: Использует Kyber512 для инкапсуляции ключей и Dilithium для цифровых подписей, рекомендованные NIST.
-- **Сквозное шифрование (E2EE)**: Гарантирует, что только отправитель и получатель имеют доступ к содержимому сообщений.
-- **Децентрализация**: Повышает устойчивость к цензуре и отказам центральных серверов.
-- **Анонимность пользователей**: Пользователи идентифицируются через хэши публичных ключей, исключая необходимость в личных идентификаторах.
+- **Post-Quantum Security**: Utilizes Kyber512 for key encapsulation and Dilithium for digital signatures, as recommended by NIST.
+- **End-to-End Encryption (E2EE)**: Ensures that only the sender and recipient can access message content.
+- **Decentralization**: Enhances resilience against censorship and central server failures.
+- **User Anonymity**: Users are identified via public key hashes, eliminating the need for personal identifiers.
 
-## Архитектура
+## Architecture
 
-ZeroTrace использует клиент-серверную модель:
-- **Клиент**: Отвечает за генерацию ключей, их хранение, шифрование/дешифрование и взаимодействие с сервером. Реализован на Python с использованием фреймворка Flet.
-- **Сервер**: Управляет аутентификацией пользователей, хранит публичные ключи и обеспечивает обмен сообщениями через REST API (FastAPI). Данные хранятся в MongoDB.
+ZeroTrace employs a client-server model:
+- **Client**: Handles key generation, storage, encryption/decryption, and server interaction. Implemented in Python using the Flet framework.
+- **Server**: Manages user authentication, stores public keys, and facilitates message exchange via REST API (FastAPI). Data is stored in MongoDB.
 
-В будущем планируется переход к одноранговой (P2P) модели для поддержки оффлайн-функциональности и уменьшения зависимости от серверов.
+Future plans include transitioning to a peer-to-peer (P2P) model to support offline functionality and reduce server dependency.
 
-## Криптографические алгоритмы
+## Cryptographic Algorithms
 
-| Алгоритм   | Назначение                     | Описание                                                                 |
-|------------|--------------------------------|--------------------------------------------------------------------------|
-| Kyber512   | Инкапсуляция ключей (KEM)      | Постквантовый алгоритм для безопасного обмена ключами на основе LWE.     |
-| Dilithium  | Цифровая подпись               | Постквантовый алгоритм для аутентификации сообщений.                     |
-| AES-GCM    | Симметричное шифрование        | Используется для шифрования содержимого сообщений после обмена ключами.  |
+| Algorithm  | Purpose                      | Description                                                              |
+|------------|------------------------------|--------------------------------------------------------------------------|
+| Kyber512   | Key Encapsulation (KEM)      | Post-quantum algorithm for secure key exchange based on LWE.             |
+| Dilithium  | Digital Signature            | Post-quantum algorithm for message authentication.                       |
+| AES-GCM    | Symmetric Encryption         | Used for encrypting message content after key exchange.                  |
 
-## Детали реализации
+## Implementation Details
 
-- **Фреймворк интерфейса**: Flet (на основе Python, кроссплатформенный).
-- **Сервер**: FastAPI.
-- **Базы данных**: MongoDB (серверная часть), SQLite (локальное хранение на клиенте).
-- **Криптография**: Библиотека oqs-python для постквантовой криптографии.
+- **Interface Framework**: Flet (Python-based, cross-platform).
+- **Server**: FastAPI.
+- **Databases**: MongoDB (server-side), SQLite (client-side local storage).
+- **Cryptography**: oqs-python library for post-quantum cryptography.
 
-## Производительность
+## Performance
 
-Протестировано на Intel Core i5-12600, 16 ГБ ОЗУ, Nvidia RTX 3060, Windows 10. Среднее время операций:
+Tested on Intel Core i5-12600, 16 GB RAM, Nvidia RTX 3060, Windows 10. Average operation times:
 
-| Операция                          | Время (сек) |
-|-----------------------------------|-------------|
-| Kyber512 (инкапсуляция/декапсуляция) | 0.9         |
-| Dilithium (подпись/проверка)      | 0.5 / 0.2   |
-| AES-GCM (шифрование/дешифрование) | 0.3–0.9     |
-| Отправка/получение сообщения (API)| 0.5–0.5     |
+| Operation                           | Time (sec) |
+|-------------------------------------|------------|
+| Kyber512 (encapsulation/decapsulation) | 0.9        |
+| Dilithium (signing/verification)    | 0.5 / 0.2  |
+| AES-GCM (encryption/decryption)     | 0.3–0.9    |
+| Message send/receive (API)          | 0.5–0.5    |
 
-Общая задержка отправки сообщения: 1–2 секунды, что подходит для общения в реальном времени.
+Total message sending latency: 1–2 seconds, suitable for real-time communication.
 
-## Меры безопасности
+## Security Measures
 
-- Защита от квантовых атак, атак "человек посередине" (MitM), компрометации сервера, потери ключей, DoS-атак и социальной инженерии.
-- Использование цифровых подписей и уникальных хэшей диалогов для обеспечения аутентичности и целостности.
-- Минимизация раскрытия метаданных через хэшированные идентификаторы и планы по внедрению федеративной архитектуры.
+- Protection against quantum attacks, man-in-the-middle (MitM) attacks, server compromise, key loss, DoS attacks, and social engineering.
+- Use of digital signatures and unique dialog hashes to ensure authenticity and integrity.
+- Minimization of metadata exposure through hashed identifiers and plans for a federated architecture.
 
-## Сравнение с существующими решениями
+## Comparison with Existing Solutions
 
-ZeroTrace выделяется среди Signal, Threema и Matrix благодаря:
-- Устойчивости к квантовым атакам.
-- Децентрализованной архитектуре.
-- Открытому исходному коду.
-- Анонимности через хэшированные идентификаторы.
+ZeroTrace stands out compared to Signal, Threema, and Matrix due to:
+- Resilience against quantum attacks.
+- Decentralized architecture.
+- Open-source code.
+- Anonymity via hashed identifiers.
 
-## Планы на будущее
+## Future Plans
 
-- Переход к полностью децентрализованной P2P-архитектуре.
-- Улучшение обучения пользователей управлению ключами.
-- Повышение масштабируемости защиты от DoS-атак.
+- Transition to a fully decentralized P2P architecture.
+- Improved user education on key management.
+- Enhanced scalability for DoS attack protection.
 
-## Зависимости
+## Dependencies
 
-- oqs-python (постквантовая криптография)
-- FastAPI (сервер)
-- MongoDB (база данных)
-- SQLite (локальное хранение)
-- Flet (интерфейс)
+- oqs-python (post-quantum cryptography)
+- FastAPI (server)
+- MongoDB (database)
+- SQLite (local storage)
+- Flet (interface)
 
-## Лицензия
+## License
 
-[Информация о лицензии не предоставлена]
+ZeroTrace is licensed under the MIT License. You are free to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the software, provided the following conditions are met:
 
-## Участие в проекте
-
-[Руководство для контрибьюторов не предоставлено]
-
----
-
-**Примечание**: Этот README создан на основе предоставленной спецификации проекта. Для получения актуальной информации обратитесь к официальной документации проекта или свяжитесь с его разработчиками.
+- The copyright notice and this permission notice must be included in all copies or substantial portions of the software.
+- The software is provided "as is," without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, and noninfringement.
