@@ -47,6 +47,9 @@ class LoginSystem:
         password = self.password_area.value
         result = self.__secure_messenger.register(self.username_area.value ,self.password_area.value)
         if result:
+            self.page.client_storage.set("kem_pub", result[0])
+            self.page.client_storage.set("sign_pub", result[1])
+            self.page.client_storage.set("keys_data", result[2])
             self.on_success(password)
         else:
             self.username_area.border_color = ft.Colors.ERROR_CONTAINER
