@@ -44,9 +44,10 @@ class LoginSystem:
         self.page.update()
 
     def register(self, e):
+        password = self.password_area.value
         result = self.__secure_messenger.register(self.username_area.value ,self.password_area.value)
         if result:
-            self.on_success()
+            self.on_success(password)
         else:
             self.username_area.border_color = ft.Colors.ERROR_CONTAINER
             self.username_area.value = "Username already create"
