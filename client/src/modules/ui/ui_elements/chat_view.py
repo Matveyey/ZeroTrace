@@ -66,9 +66,9 @@ class ChatView:
         """Отправляет сообщение и сразу отображает его в чате."""
         if self.input_field.value and self.current_chat_id:
             msg = TextMessage(text=self.input_field.value, sender="You", timestamp=round(time(),2))
-            self.database.add_message(
-                "You", msg.text.encode(), 0, msg.timestamp, self.current_chat_id
-            )
+            #self.database.add_message(
+            #    "You", msg.text.encode(), 0, msg.timestamp, self.current_chat_id
+            #)
             # Добавляем сообщение в список и интерфейс с индикатором загрузки
             self.messages.append(msg)
             self.displayed_timestamps.add(msg.timestamp)
@@ -101,9 +101,9 @@ class ChatView:
                 sleep(2)
                 continue
             sleep(2)
-            # Получаем временную метку последнего сообщения
-            if chat_view_instance.messages:
-                timestamp = max(chat_view_instance.messages, key=lambda x: x.timestamp).timestamp
+            # Получаем временную метку
+            if chat_view_instance.page.client_storage.get("last_check_chat_view"):
+                timestamp = chat_view_instance.page.client_storage.get("last_check_chat_view")
             else:
                 timestamp = 0
             # Загружаем новые сообщения из базы данных
@@ -120,3 +120,4 @@ class ChatView:
                     messages.append(LoadAnim(0))
             if messages:
                 chat_view_instance.load_messages(messages)  # Загружаем без реверса
+            chat_view_instance.page.client_storage.set("last_check_chat_view", time())

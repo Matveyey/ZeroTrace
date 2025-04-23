@@ -25,7 +25,7 @@ class MessengerApp:
     def update_database_messages(self):
         while True:
             sleep(5)
-            last_message_time = self.database.get_max_timestamp()
+            last_message_time = self.page.client_storage.get("last_check")
             if not last_message_time:
                 last_message_time = 0
             new_message = self.__secure_messenger.receive_all_crypted_messages(
@@ -47,7 +47,7 @@ class MessengerApp:
                         message["timestamp"],
                         message["dialog_hash"],
                     )
-
+            self.page.client_storage.set("last_check", time())
     def start(self):
         self.page.title = "ZeroTrace"
         self.page.theme_mode = "dark"
