@@ -80,4 +80,4 @@ async def fetch_users(query: str):
     return await db.get_users(query)
 
 if __name__ == "__main__":
-    run(app)
+    run(app,port=443,host=0.0.0.0)
